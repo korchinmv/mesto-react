@@ -1,18 +1,22 @@
-function Main() {
-  const handleEditAvatarClick = () => {
-    const popupAvatar = document.querySelector(".popup-edit-avatar");
-    popupAvatar.classList.add("popup_opened");
-  };
+import React, { useEffect } from "react";
+import api from "../utils/Api.js";
 
-  const handleEditProfileClick = () => {
-    const popupProfile = document.querySelector(".popup-profile");
-    popupProfile.classList.add("popup_opened");
-  };
+function Main({ onEditAvatar, onEditProfile, onAddPlace }) {
+  const [userName, setUserName] = React.useState();
+  const [userDescription, setUserDescription] = React.useState();
+  const [userAvatar, setUserAvatar] = React.useState();
+  const [cards, setCards] = React.useState([]);
 
-  const handleAddPlaceClick = () => {
-    const popupCard = document.querySelector(".popup-card");
-    popupCard.classList.add("popup_opened");
-  };
+  useEffect(() => {
+    api
+      .getUser()
+      .then((resp) => {
+        setUserName(resp.name);
+        setUserDescription(resp.about);
+        setUserAvatar(resp.avatar);
+      })
+      .catch((err) => console.log(err));
+  });
 
   return (
     <main className="main">
@@ -23,24 +27,24 @@ function Main() {
               <button
                 className="profile__avatar-btn"
                 type="button"
-                onClick={handleEditAvatarClick}
+                onClick={onEditAvatar}
               >
-                <img className="profile__avatar" src="#" />
+                <img className="profile__avatar" src={userAvatar} />
               </button>
 
               <div className="profile__content">
                 <div className="profile__content-box">
-                  <h1 className="profile__name"></h1>
+                  <h1 className="profile__name">{userName}</h1>
 
                   <button
                     className="profile__edit hover"
                     type="button"
                     aria-label="Редактировать профиль"
-                    onClick={handleEditProfileClick}
+                    onClick={onEditProfile}
                   ></button>
                 </div>
 
-                <p className="profile__profession"></p>
+                <p className="profile__profession">{userDescription}</p>
               </div>
             </div>
 
@@ -48,7 +52,7 @@ function Main() {
               className="profile__add hover"
               type="button"
               aria-label="Добавить место"
-              onClick={handleAddPlaceClick}
+              onClick={onAddPlace}
             ></button>
           </div>
         </div>
