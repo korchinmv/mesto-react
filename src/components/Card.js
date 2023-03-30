@@ -10,7 +10,7 @@ function Card({ card, onCardClick }) {
           className="card__trash-button hover"
           type="button"
           aria-label="Удалить место"
-        ></button>
+        />
 
         <img
           className="card__photo"
@@ -26,7 +26,7 @@ function Card({ card, onCardClick }) {
               className="card__like-button hover"
               type="button"
               aria-label="Нравится"
-            ></button>
+            />
             <span className="card__like-num">{card.likes.length}</span>
           </div>
         </div>

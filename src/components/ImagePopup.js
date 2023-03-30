@@ -11,7 +11,7 @@ function ImagePopup({ card, onClose }) {
           type="button"
           aria-label="Закрыть"
           onClick={onClose}
-        ></button>
+        />
         <img className="popup__image" src={card.link} alt={card.name} />
         <figcaption className="popup__figcaption">
           <p className="popup__caption">{`${card.name}`}</p>
