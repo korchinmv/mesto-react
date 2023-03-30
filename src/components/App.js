@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -6,16 +6,18 @@ import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 
 function App() {
-  const [popupProfileOpen, setProfilePopupOpen] = React.useState(false);
-  const [popupAvatarOpen, setAvatarPopupOpen] = React.useState(false);
-  const [popupCardOpen, setCardPopupOpen] = React.useState(false);
-  const [popupAnswerOpen, setAnswerPopupOpen] = React.useState(false);
+  const [popupProfileOpen, setProfilePopupOpen] = useState(false);
+  const [popupAvatarOpen, setAvatarPopupOpen] = useState(false);
+  const [popupCardOpen, setCardPopupOpen] = useState(false);
+  const [popupAnswerOpen, setAnswerPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
 
   const closeAllPopups = () => {
     setProfilePopupOpen(false);
     setAvatarPopupOpen(false);
     setCardPopupOpen(false);
     setAnswerPopupOpen(false);
+    setSelectedCard({});
   };
 
   const onEditAvatar = () => {
@@ -30,13 +32,18 @@ function App() {
     setCardPopupOpen(true);
   };
 
+  const handleCardClick = (card) => {
+    setSelectedCard(card);
+  };
+
   return (
-    <body className="page">
+    <div className="page">
       <Header />
       <Main
         onEditAvatar={onEditAvatar}
         onEditProfile={onEditProfile}
         onAddPlace={onAddPlace}
+        onCardClick={handleCardClick}
       />
       <Footer />
 
@@ -49,7 +56,7 @@ function App() {
         <form
           className="popup__form popup__form_profile"
           name="popup-profile-change"
-          novalidate
+          noValidate
         >
           <label className="popup__field">
             <input
@@ -59,8 +66,8 @@ function App() {
               name="username"
               placeholder="Имя"
               required
-              minlength="2"
-              maxlength="40"
+              minLength="2"
+              maxLength="40"
             />
             <span className="popup__input-error input-name-error"></span>
           </label>
@@ -73,8 +80,8 @@ function App() {
               name="job"
               placeholder="О себе"
               required
-              minlength="2"
-              maxlength="200"
+              minLength="2"
+              maxLength="200"
             />
             <span className="popup__input-error input-job-error"></span>
           </label>
@@ -94,7 +101,7 @@ function App() {
         <form
           className="popup__form popup__form_card"
           name="popup-add-card"
-          novalidate
+          noValidate
         >
           <label className="popup__field">
             <input
@@ -104,8 +111,8 @@ function App() {
               name="name"
               placeholder="Название"
               required
-              minlength="2"
-              maxlength="30"
+              minLength="2"
+              maxLength="30"
             />
             <span className="popup__input-error input-name-card-error"></span>
           </label>
@@ -137,7 +144,7 @@ function App() {
         <form
           className="popup__form popup__form_avatar"
           name="popup-edit-avatar"
-          novalidate
+          noValidate
         >
           <label className="popup__field">
             <input
@@ -168,34 +175,8 @@ function App() {
         </button>
       </PopupWithForm>
 
-      <ImagePopup />
-
-      <template className="card-template">
-        <li className="gallery__item">
-          <article className="card">
-            <button
-              className="card__trash-button hover"
-              type="button"
-              aria-label="Удалить место"
-            ></button>
-
-            <img className="card__photo" src="#" alt="Фотография" />
-
-            <div className="card__box">
-              <h2 className="card__name">Карачаевск</h2>
-              <div className="card__like">
-                <button
-                  className="card__like-button hover"
-                  type="button"
-                  aria-label="Нравится"
-                ></button>
-                <span className="card__like-num">0</span>
-              </div>
-            </div>
-          </article>
-        </li>
-      </template>
-    </body>
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+    </div>
   );
 }
 
