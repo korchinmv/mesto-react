@@ -70,6 +70,14 @@ class Api {
     return promise.then(this._getJson);
   }
 
+  changeLikeCardStatus(id, isLiked) {
+    if (isLiked) {
+      return this.addLike(id);
+    } else {
+      return this.deleteLike(id);
+    }
+  }
+
   addLike(id) {
     const promise = fetch(`${this._URL}cards/${id}/likes`, {
       method: "PUT",
