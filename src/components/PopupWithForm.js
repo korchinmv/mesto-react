@@ -5,15 +5,17 @@ function PopupWithForm({
   isOpen,
   closeAllPopups,
   buttonText,
+  onSubmit,
 }) {
   return (
-    <div className={`popup popup-${name} ${isOpen ? "popup_opened" : ""}`}>
+    <div className={`popup popup-${name} ${isOpen && "popup_opened"}`}>
       <div className="popup__container">
         <h3 className="popup__title">{title}</h3>
         <form
           className={`popup__form popup__${name}`}
           name="popup-profile-change"
           noValidate
+          onSubmit={onSubmit}
         >
           {children}
           <button className="popup__save submit-profile-form" type="submit">

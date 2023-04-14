@@ -4,6 +4,8 @@ import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
 import PopupWithForm from "./PopupWithForm";
+import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/Api.js";
 
@@ -39,6 +41,14 @@ function App() {
       })
       .catch((err) => console.log(err));
   }, []);
+
+  const handleUpdateUser = (data) => {
+    api
+      .sendProfile(data)
+      .then((data) => setCurrentUser(data))
+      .catch((err) => console.log(err));
+    closeAllPopups();
+  };
 
   const onEditAvatar = () => {
     setAvatarPopupOpen(true);
@@ -94,47 +104,19 @@ function App() {
         />
         <Footer />
 
-        <PopupWithForm
-          title="Редактировать профиль"
-          name="profile"
+        <EditProfilePopup
           isOpen={popupProfileOpen}
-          closeAllPopups={closeAllPopups}
-          buttonText={"Сохранить"}
-        >
-          <label className="popup__field">
-            <input
-              className="popup__input popup__input_js_name"
-              id="input-name"
-              type="text"
-              name="username"
-              placeholder="Имя"
-              required
-              minLength="2"
-              maxLength="40"
-            />
-            <span className="popup__input-error input-name-error"></span>
-          </label>
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
 
-          <label className="popup__field">
-            <input
-              className="popup__input popup__input_js_profession"
-              id="input-job"
-              type="text"
-              name="job"
-              placeholder="О себе"
-              required
-              minLength="2"
-              maxLength="200"
-            />
-            <span className="popup__input-error input-job-error"></span>
-          </label>
-        </PopupWithForm>
+        <EditAvatarPopup isOpen={popupAvatarOpen} onClose={closeAllPopups} />
 
         <PopupWithForm
           title="Новое место"
           name="card"
-          isOpen={popupCardOpen}
-          closeAllPopups={closeAllPopups}
+          // isOpen={isOpen}
+          // closeAllPopups={onClose}
           buttonText={"Создать"}
         >
           <label className="popup__field">
@@ -161,26 +143,6 @@ function App() {
               required
             />
             <span className="popup__input-error input-url-error"></span>
-          </label>
-        </PopupWithForm>
-
-        <PopupWithForm
-          title="Обновить аватар"
-          name="edit-avatar"
-          isOpen={popupAvatarOpen}
-          closeAllPopups={closeAllPopups}
-          buttonText={"Сохранить"}
-        >
-          <label className="popup__field">
-            <input
-              className="popup__input popup__input_js_link-avatar"
-              id="input-avatar"
-              type="url"
-              name="link"
-              placeholder="Ссылка на картинку"
-              required
-            />
-            <span className="popup__input-error input-avatar-error"></span>
           </label>
         </PopupWithForm>
 

@@ -42,8 +42,8 @@ class Api {
       method: "PATCH",
       headers: this._getHeaders(),
       body: JSON.stringify({
-        name: data.username,
-        about: data.job,
+        name: data.name,
+        about: data.about,
       }),
     });
 
@@ -71,11 +71,7 @@ class Api {
   }
 
   changeLikeCardStatus(id, isLiked) {
-    if (isLiked) {
-      return this.addLike(id);
-    } else {
-      return this.deleteLike(id);
-    }
+    isLiked ? this.addLike(id) : this.deleteLike(id);
   }
 
   addLike(id) {
