@@ -71,7 +71,11 @@ class Api {
   }
 
   changeLikeCardStatus(id, isLiked) {
-    isLiked ? this.addLike(id) : this.deleteLike(id);
+    if (isLiked === true) {
+      return this.addLike(id);
+    } else {
+      return this.deleteLike(id);
+    }
   }
 
   addLike(id) {
@@ -94,9 +98,7 @@ class Api {
     const promise = fetch(`${this._URL}users/me/avatar`, {
       method: "PATCH",
       headers: this._getHeaders(),
-      body: JSON.stringify({
-        avatar: avatar.link,
-      }),
+      body: JSON.stringify(avatar),
     });
     return promise.then(this._getJson);
   }

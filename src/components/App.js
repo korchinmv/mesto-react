@@ -10,8 +10,8 @@ import ImagePopup from "./ImagePopup";
 import api from "../utils/Api.js";
 
 function App() {
-  const [popupProfileOpen, setProfilePopupOpen] = useState(false);
-  const [popupAvatarOpen, setAvatarPopupOpen] = useState(false);
+  const [popupProfileOpen, setPopupProfileOpen] = useState(false);
+  const [popupAvatarOpen, setPopupAvatarOpen] = useState(false);
   const [popupCardOpen, setCardPopupOpen] = useState(false);
   const [popupAnswerOpen, setAnswerPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
@@ -19,8 +19,8 @@ function App() {
   const [cards, setCards] = useState([]);
 
   const closeAllPopups = () => {
-    setProfilePopupOpen(false);
-    setAvatarPopupOpen(false);
+    setPopupProfileOpen(false);
+    setPopupAvatarOpen(false);
     setCardPopupOpen(false);
     setAnswerPopupOpen(false);
     setSelectedCard({});
@@ -43,19 +43,28 @@ function App() {
   }, []);
 
   const handleUpdateUser = (data) => {
+    console.log(data);
     api
       .sendProfile(data)
-      .then((data) => setCurrentUser(data))
+      .then((res) => setCurrentUser(res))
+      .catch((err) => console.log(err));
+    closeAllPopups();
+  };
+
+  const handleUpdateAvatar = (avatar) => {
+    api
+      .setAvatar(avatar)
+      .then((res) => setCurrentUser(res))
       .catch((err) => console.log(err));
     closeAllPopups();
   };
 
   const onEditAvatar = () => {
-    setAvatarPopupOpen(true);
+    setPopupAvatarOpen(true);
   };
 
   const onEditProfile = () => {
-    setProfilePopupOpen(true);
+    setPopupProfileOpen(true);
   };
 
   const onAddPlace = () => {
@@ -110,7 +119,11 @@ function App() {
           onUpdateUser={handleUpdateUser}
         />
 
-        <EditAvatarPopup isOpen={popupAvatarOpen} onClose={closeAllPopups} />
+        <EditAvatarPopup
+          isOpen={popupAvatarOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
 
         <PopupWithForm
           title="Новое место"
