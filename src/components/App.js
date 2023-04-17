@@ -3,9 +3,9 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
-import PopupWithForm from "./PopupWithForm";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from "./AddPlacePopup";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/Api.js";
 
@@ -88,6 +88,15 @@ function App() {
       .catch((err) => console.log(err));
   };
 
+  const handleAddPlaceSubmit = (dataForm) => {
+    api
+      .sendCard(dataForm)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+      })
+      .catch((err) => console.log(err));
+  };
+
   const handleCardDelete = (card) => {
     api
       .deleteCard(card._id)
@@ -125,47 +134,19 @@ function App() {
           onUpdateAvatar={handleUpdateAvatar}
         />
 
-        <PopupWithForm
-          title="Новое место"
-          name="card"
-          // isOpen={isOpen}
-          // closeAllPopups={onClose}
-          buttonText={"Создать"}
-        >
-          <label className="popup__field">
-            <input
-              className="popup__input popup__input_js_name-card"
-              id="input-name-card"
-              type="text"
-              name="name"
-              placeholder="Название"
-              required
-              minLength="2"
-              maxLength="30"
-            />
-            <span className="popup__input-error input-name-card-error"></span>
-          </label>
+        <AddPlacePopup
+          isOpen={popupCardOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+        />
 
-          <label className="popup__field">
-            <input
-              className="popup__input popup__input_js_link-card"
-              id="input-url"
-              type="url"
-              name="link"
-              placeholder="Ссылка на картинку"
-              required
-            />
-            <span className="popup__input-error input-url-error"></span>
-          </label>
-        </PopupWithForm>
-
-        <PopupWithForm
+        {/* <PopupWithForm
           title="Вы уверены?"
           name="edit-delete"
           isOpen={popupAnswerOpen}
           closeAllPopups={closeAllPopups}
           buttonText={"Да"}
-        ></PopupWithForm>
+        ></PopupWithForm> */}
 
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       </div>
