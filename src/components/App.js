@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import ConfirmPopup from "./ConfirmPopup";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/Api.js";
 
@@ -13,16 +14,17 @@ function App() {
   const [popupProfileOpen, setPopupProfileOpen] = useState(false);
   const [popupAvatarOpen, setPopupAvatarOpen] = useState(false);
   const [popupCardOpen, setCardPopupOpen] = useState(false);
-  const [popupAnswerOpen, setAnswerPopupOpen] = useState(false);
+  const [popupConfirmOpen, setConfirmPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const closeAllPopups = () => {
     setPopupProfileOpen(false);
     setPopupAvatarOpen(false);
     setCardPopupOpen(false);
-    setAnswerPopupOpen(false);
+    setConfirmPopupOpen(false);
     setSelectedCard({});
   };
 
@@ -43,20 +45,33 @@ function App() {
   }, []);
 
   const handleUpdateUser = (data) => {
-    console.log(data);
+    setIsLoading(true);
+
     api
       .sendProfile(data)
-      .then((res) => setCurrentUser(res))
-      .catch((err) => console.log(err));
-    closeAllPopups();
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const handleUpdateAvatar = (avatar) => {
+    setIsLoading(true);
+
     api
       .setAvatar(avatar)
-      .then((res) => setCurrentUser(res))
-      .catch((err) => console.log(err));
-    closeAllPopups();
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const onEditAvatar = () => {
@@ -89,20 +104,33 @@ function App() {
   };
 
   const handleAddPlaceSubmit = (dataForm) => {
+    setIsLoading(true);
+
     api
       .sendCard(dataForm)
       .then((newCard) => {
         setCards([newCard, ...cards]);
+        closeAllPopups();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const handleCardDelete = (card) => {
+    <ConfirmPopup
+      title="Вы уверены?"
+      name="edit-delete"
+      isOpen={popupConfirmOpen}
+      closeAllPopups={closeAllPopups}
+      buttonText={"Да"}
+    ></ConfirmPopup>;
+
     api
       .deleteCard(card._id)
       .then(() => {
-        const newCards = cards.filter((item) => item._id !== card._id);
-        setCards(newCards);
+        setCards((state) => state.filter((item) => item._id !== card._id));
       })
       .catch((err) => console.log(err));
   };
@@ -126,27 +154,22 @@ function App() {
           isOpen={popupProfileOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
+          isLoading={isLoading}
         />
 
         <EditAvatarPopup
           isOpen={popupAvatarOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
+          isLoading={isLoading}
         />
 
         <AddPlacePopup
           isOpen={popupCardOpen}
           onClose={closeAllPopups}
           onAddPlace={handleAddPlaceSubmit}
+          isLoading={isLoading}
         />
-
-        {/* <PopupWithForm
-          title="Вы уверены?"
-          name="edit-delete"
-          isOpen={popupAnswerOpen}
-          closeAllPopups={closeAllPopups}
-          buttonText={"Да"}
-        ></PopupWithForm> */}
 
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       </div>

@@ -13,8 +13,7 @@ const PopupWithForm = ({
         <h3 className="popup__title">{title}</h3>
         <form
           className={`popup__form popup__${name}`}
-          name="popup-profile-change"
-          noValidate
+          name={`popup-${name}`}
           onSubmit={onSubmit}
         >
           {children}

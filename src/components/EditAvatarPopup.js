@@ -1,12 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import PopupWithForm from "./PopupWithForm";
+import usePopupClose from "../hooks/usePopupClose";
 
-const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
-  const [inputText, setInputText] = useState("");
+const EditAvatarPopup = ({ isLoading, isOpen, onClose, onUpdateAvatar }) => {
   const textInput = useRef(null);
-  const changeText = (e) => {
-    setInputText(e.target.value);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,13 +12,19 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
     });
   };
 
+  usePopupClose(isOpen, onClose);
+
+  useEffect(() => {
+    textInput.current.value = "";
+  }, [isOpen]);
+
   return (
     <PopupWithForm
       title="Обновить аватар"
       name="edit-avatar"
       isOpen={isOpen}
       closeAllPopups={onClose}
-      buttonText={"Сохранить"}
+      buttonText={isLoading ? "Сохранение..." : "Сохранить"}
       onSubmit={handleSubmit}
     >
       <label className="popup__field">
@@ -32,9 +35,7 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
           name="link"
           placeholder="Ссылка на картинку"
           required
-          value={inputText}
           ref={textInput}
-          onChange={changeText}
         />
         <span className="popup__input-error input-avatar-error"></span>
       </label>

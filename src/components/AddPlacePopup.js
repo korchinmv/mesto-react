@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
+import usePopupClose from "../hooks/usePopupClose";
 
-const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
+const AddPlacePopup = ({ isLoading, isOpen, onClose, onAddPlace }) => {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
-
   const handleChangeName = (e) => {
     setName(e.target.value);
   };
@@ -21,13 +21,20 @@ const AddPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
     });
   };
 
+  usePopupClose(isOpen, onClose);
+
+  useEffect(() => {
+    setName("");
+    setLink("");
+  }, [isOpen]);
+
   return (
     <PopupWithForm
       title="Новое место"
       name="card"
       isOpen={isOpen}
       closeAllPopups={onClose}
-      buttonText={"Создать"}
+      buttonText={isLoading ? "Сохранение..." : "Создать"}
       onSubmit={handleSubmit}
     >
       <label className="popup__field">

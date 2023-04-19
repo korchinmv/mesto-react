@@ -23,6 +23,10 @@ class Api {
     }
   }
 
+  _request(url, options) {
+    return fetch(url, options).then(this._getJson);
+  }
+
   getUser() {
     const promise = fetch(`${this._URL}users/me`, {
       headers: this._getHeaders(),
