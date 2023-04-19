@@ -8,7 +8,7 @@ function Main({
   onAddPlace,
   onCardClick,
   onCardLike,
-  onCardDelete,
+  openConfirmPopup,
   cards,
 }) {
   const currentUser = useContext(CurrentUserContext);
@@ -65,7 +65,7 @@ function Main({
                 key={card._id}
                 onCardLike={onCardLike}
                 onCardClick={onCardClick}
-                onCardDelete={onCardDelete}
+                openConfirmPopup={openConfirmPopup}
               />
             ))}
           </ul>

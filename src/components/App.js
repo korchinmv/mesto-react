@@ -15,6 +15,7 @@ function App() {
   const [popupAvatarOpen, setPopupAvatarOpen] = useState(false);
   const [popupCardOpen, setCardPopupOpen] = useState(false);
   const [popupConfirmOpen, setConfirmPopupOpen] = useState(false);
+  const [popupImageOpen, setImagePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
@@ -25,6 +26,7 @@ function App() {
     setPopupAvatarOpen(false);
     setCardPopupOpen(false);
     setConfirmPopupOpen(false);
+    setImagePopupOpen(false);
     setSelectedCard({});
   };
 
@@ -86,8 +88,14 @@ function App() {
     setCardPopupOpen(true);
   };
 
+  const onDeleteCard = (card) => {
+    setSelectedCard(card);
+    setConfirmPopupOpen(true);
+  };
+
   const handleCardClick = (card) => {
     setSelectedCard(card);
+    setImagePopupOpen(true);
   };
 
   const handleCardLike = (card) => {
@@ -119,20 +127,18 @@ function App() {
   };
 
   const handleCardDelete = (card) => {
-    <ConfirmPopup
-      title="Вы уверены?"
-      name="edit-delete"
-      isOpen={popupConfirmOpen}
-      closeAllPopups={closeAllPopups}
-      buttonText={"Да"}
-    ></ConfirmPopup>;
+    setIsLoading(true);
 
     api
       .deleteCard(card._id)
       .then(() => {
         setCards((state) => state.filter((item) => item._id !== card._id));
+        closeAllPopups();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -143,20 +149,18 @@ function App() {
           cards={cards}
           onEditAvatar={onEditAvatar}
           onEditProfile={onEditProfile}
+          openConfirmPopup={onDeleteCard}
           onAddPlace={onAddPlace}
           onCardClick={handleCardClick}
           onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
         />
         <Footer />
-
         <EditProfilePopup
           isOpen={popupProfileOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
           isLoading={isLoading}
         />
-
         <EditAvatarPopup
           isOpen={popupAvatarOpen}
           onClose={closeAllPopups}
@@ -171,7 +175,21 @@ function App() {
           isLoading={isLoading}
         />
 
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <ConfirmPopup
+          isOpen={popupConfirmOpen}
+          onClose={closeAllPopups}
+          buttonText={"Да"}
+          onCardDelete={handleCardDelete}
+          card={selectedCard}
+          isLoading={isLoading}
+        ></ConfirmPopup>
+
+        <ImagePopup
+          name="popup-photo"
+          card={selectedCard}
+          isOpen={popupImageOpen}
+          onClose={closeAllPopups}
+        />
       </div>
     </CurrentUserContext.Provider>
   );

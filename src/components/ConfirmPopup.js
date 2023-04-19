@@ -1,14 +1,28 @@
 import PopupWithForm from "./PopupWithForm";
+import usePopupClose from "../hooks/usePopupClose";
 
-export const ConfirmPopup = ({ isOpen, onClose, isLoading, onCardDelete }) => {
+export const ConfirmPopup = ({
+  card,
+  isOpen,
+  onClose,
+  isLoading,
+  onCardDelete,
+}) => {
+  usePopupClose(isOpen, onClose);
+
+  const deleteCard = (e) => {
+    e.preventDefault();
+    onCardDelete(card);
+  };
+
   return (
     <PopupWithForm
-      title="Обновить аватар"
+      title="Вы уверены?"
       name="confirm"
       isOpen={isOpen}
       closeAllPopups={onClose}
-      buttonText={isLoading ? "Сохранение..." : "Сохранить"}
-      onSubmit={onCardDelete}
+      buttonText={isLoading ? "Удаление..." : "Да"}
+      onSubmit={deleteCard}
     ></PopupWithForm>
   );
 };
