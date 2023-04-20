@@ -1,7 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import PopupWithForm from "./PopupWithForm";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import usePopupClose from "../hooks/usePopupClose";
 
 const EditProfilePopup = ({ isLoading, isOpen, onClose, onUpdateUser }) => {
   const currentUser = useContext(CurrentUserContext);
@@ -12,8 +11,6 @@ const EditProfilePopup = ({ isLoading, isOpen, onClose, onUpdateUser }) => {
     setName(currentUser.name);
     setDescription(currentUser.about);
   }, [currentUser, isOpen]);
-
-  usePopupClose(isOpen, onClose);
 
   const handleChangeName = (e) => {
     setName(e.target.value);

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
-import usePopupClose from "../hooks/usePopupClose";
 
 const AddPlacePopup = ({ isLoading, isOpen, onClose, onAddPlace }) => {
   const [name, setName] = useState("");
@@ -20,8 +19,6 @@ const AddPlacePopup = ({ isLoading, isOpen, onClose, onAddPlace }) => {
       link,
     });
   };
-
-  usePopupClose(isOpen, onClose);
 
   useEffect(() => {
     setName("");

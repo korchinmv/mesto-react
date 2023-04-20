@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import PopupWithForm from "./PopupWithForm";
-import usePopupClose from "../hooks/usePopupClose";
 
 const EditAvatarPopup = ({ isLoading, isOpen, onClose, onUpdateAvatar }) => {
   const textInput = useRef(null);
@@ -11,8 +10,6 @@ const EditAvatarPopup = ({ isLoading, isOpen, onClose, onUpdateAvatar }) => {
       avatar: textInput.current.value,
     });
   };
-
-  usePopupClose(isOpen, onClose);
 
   useEffect(() => {
     textInput.current.value = "";
